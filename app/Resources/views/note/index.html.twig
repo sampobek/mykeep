@@ -1,0 +1,43 @@
+{% extends ':note:layout.html.twig' %}
+
+{% block content %}
+    {% if notes %}
+        <div class="columns">
+            {% for note in notes %}
+                <div class="column is-one-third">
+                    <div class="card">
+                        {% if note.title %}
+                        <header class="card-header">
+                            <p class="card-header-title" style="margin-left: 0.75em">
+                                <a href="{{ path('note_edit', {id: note.id}) }}">
+                                    {{ note.title }}
+                                </a>
+                            </p>
+                        </header>
+                        {% endif %}
+                        <div class="card-content">
+                            <div class="content">
+                                {{ note.content | nl2br }}
+                                <br>
+                                <br>
+                                <small>
+                                    <a href="{{ path('note_edit', {id: note.id}) }}">
+                                        {{ note.updatedAt | date('Y-m-d H:i:s') }}
+                                    </a>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if (loop.index) % 3 == 0 %}
+                    </div>
+                    <div class="columns">
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="notification has-text-centered">
+            You have no notes. Please <a href="{{ path('note_new') }}">create one</a>.
+        </div>
+    {% endif %}
+{% endblock %}

@@ -9,11 +9,21 @@
             {#<a class="nav-item is-tab">Pricing</a>#}
             {#<a class="nav-item is-tab">About</a>#}
         </div>
+        <div class="nav-center">
+            <span class="nav-item">
+                <a class="button is-primary" href="{{ path('note_new') }}">
+                    <span class="icon">
+                        <i class="fa fa-plus"></i>
+                    </span>
+                    <span>Add New</span>
+                </a>
+            </span>
+        </div>
         <span class="nav-toggle">
-      <span></span>
-      <span></span>
-      <span></span>
-    </span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
         <div class="nav-right nav-menu">
             {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                 <a class="nav-item is-tab">

@@ -1,0 +1,32 @@
+{% extends ':note:layout.html.twig' %}
+
+{% block content %}
+    <div class="columns">
+        <div class="column is-one-quarter"></div>
+        <div class="column is-half">
+            {{ form_start(form) }}
+
+            {{ form_label(form.title, '', {'label_attr': {'class': 'label'}}) }}
+            <p class="control">
+                {{ form_widget(form.title, {'attr': {'class': 'input'}}) }}
+            </p>
+
+            {{ form_label(form.content, '', {'label_attr': {'class': 'label'}}) }}
+            <p class="control">
+                {{ form_widget(form.content, {'attr': {'class': 'textarea'}}) }}
+            </p>
+
+            <div class="control is-grouped">
+                <p class="control">
+                    <input class="button is-primary" type="submit" value="Create" />
+                </p>
+                <p class="control">
+                    <a href="{{ path('note_index') }}" class="button is-link">
+                        Cancel
+                    </a>
+                </p>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
