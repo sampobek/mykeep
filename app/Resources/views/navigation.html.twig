@@ -1,0 +1,38 @@
+<nav class="nav has-shadow">
+    <div class="container">
+        <div class="nav-left">
+            <a href="{{ path('homepage') }}"
+               class="nav-item is-tab {{ 'homepage' | active('is-active') }}">
+                MyKeep
+            </a>
+            {#<a class="nav-item is-tab">Features</a>#}
+            {#<a class="nav-item is-tab">Pricing</a>#}
+            {#<a class="nav-item is-tab">About</a>#}
+        </div>
+        <span class="nav-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+        <div class="nav-right nav-menu">
+            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                <a class="nav-item is-tab">
+                    {{ app.user.username }}
+                </a>
+                <a href="{{ path('fos_user_security_logout') }}"
+                   class="nav-item is-tab">
+                    Log out
+                </a>
+            {% else %}
+                <a href="{{ path('fos_user_registration_register') }}"
+                   class="nav-item is-tab {{ 'fos_user_registration_register' | active('is-active') }}">
+                    Registration
+                </a>
+                <a href="{{ path('fos_user_security_login') }}"
+                   class="nav-item is-tab {{ 'fos_user_security_login' | active('is-active') }}">
+                    Login
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
