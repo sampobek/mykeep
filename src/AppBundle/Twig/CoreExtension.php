@@ -3,6 +3,7 @@
 namespace AppBundle\Twig;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class CoreExtension extends \Twig_Extension
 {
@@ -24,8 +25,10 @@ class CoreExtension extends \Twig_Extension
     }
 
     public function isActive($route, $class) {
-        if ($this->request->get('_route') == $route) {
-            return $class;
+        if ($this->request instanceof Request) {
+            if ($this->request->get('_route') == $route) {
+                return $class;
+            }
         }
 
         return '';

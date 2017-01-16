@@ -65,8 +65,17 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+    port: 465
+    encryption: ssl
+    auth_mode:  ~
 
 fos_user:
     db_driver: orm
     firewall_name: main
     user_class: AppBundle\Entity\User
+    from_email:
+        address: %mailer_user%
+        sender_name: MyKeep
+    registration:
+        confirmation:
+            enabled: true
