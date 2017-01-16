@@ -23,7 +23,7 @@ class NoteController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $notes = $em->getRepository('AppBundle:Note')->findAll();
+        $notes = $em->getRepository('AppBundle:Note')->findBy(['user' => $this->getUser()]);
 
         return $this->render('note/index.html.twig', array(
             'notes' => $notes,
