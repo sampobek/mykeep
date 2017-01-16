@@ -10,3 +10,9 @@ services:
         public: false
         tags:
             - { name: twig.extension }
+
+    note.listener:
+        class: AppBundle\Listener\NoteListener
+        arguments: ['@service_container']
+        tags:
+            - { name: doctrine.event_listener, event: preUpdate }
