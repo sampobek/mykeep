@@ -21,6 +21,10 @@ class NoteController extends Controller
      */
     public function indexAction()
     {
+        if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $notes = $em->getRepository('AppBundle:Note')->findBy(['user' => $this->getUser()]);
