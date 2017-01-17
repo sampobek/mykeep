@@ -32,3 +32,4 @@ security:
         - { path: ^/\d/edit, role: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/new, role: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/\d, role: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/trash, role: IS_AUTHENTICATED_REMEMBERED }

@@ -26,6 +26,10 @@
         </span>
         <div class="nav-right nav-menu">
             {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                <a href="{{ path('note_trash') }}"
+                   class="nav-item is-tab {{ 'note_trash' | active('is-active') }}">
+                    Trash
+                </a>
                 <a class="nav-item is-tab">
                     {{ app.user.username }}
                 </a>

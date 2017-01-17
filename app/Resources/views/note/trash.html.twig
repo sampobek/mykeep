@@ -1,0 +1,43 @@
+{% extends ':note:layout.html.twig' %}
+
+{% block content %}
+    {% if notes %}
+        <div class="columns">
+            {% for note in notes %}
+                <div class="column is-one-third">
+                    <div class="card">
+                        {% if note.title %}
+                        <header class="card-header">
+                            <p class="card-header-title" style="margin-left: 0.75em">
+                                <span>
+                                    {{ note.title }}
+                                </span>
+                            </p>
+                        </header>
+                        {% endif %}
+                        <div class="card-content">
+                            <div class="content">
+                                {{ note.content | nl2br }}
+                                <br>
+                                <br>
+                                <small>
+                                    <p>
+                                        {{ note.updatedAt | date('Y-m-d H:i:s') }}
+                                    </p>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if (loop.index) % 3 == 0 %}
+                    </div>
+                    <div class="columns">
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="notification has-text-centered">
+            You have no removed notes.</a>.
+        </div>
+    {% endif %}
+{% endblock %}

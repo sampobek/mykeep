@@ -27,7 +27,11 @@ class NoteController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $notes = $em->getRepository('AppBundle:Note')->findBy(['user' => $this->getUser()]);
+        $notes = $em->getRepository('AppBundle:Note')
+            ->findBy([
+                'user' => $this->getUser(),
+                'isDeleted' => false
+            ]);
 
         return $this->render('note/index.html.twig', array(
             'notes' => $notes,
@@ -99,8 +103,9 @@ class NoteController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->remove($note);
-            $em->flush($note);
+            $note->setIsDeleted(true);
+            $em->persist($note);
+            $em->flush();
         }
 
         return $this->redirectToRoute('note_index');
@@ -120,5 +125,26 @@ class NoteController extends Controller
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    /**
+     * Lists all note entities in Trash.
+     *
+     * @Route("/trash", name="note_trash")
+     * @Method("GET")
+     */
+    public function trashAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $notes = $em->getRepository('AppBundle:Note')
+            ->findBy([
+                'user' => $this->getUser(),
+                'isDeleted' => true
+            ]);
+
+        return $this->render('note/trash.html.twig', array(
+            'notes' => $notes,
+        ));
     }
 }
