@@ -6,14 +6,12 @@
         <div class="column is-half">
             {{ form_start(edit_form) }}
 
-            {{ form_label(edit_form.title, '', {'label_attr': {'class': 'label'}}) }}
             <p class="control">
-                {{ form_widget(edit_form.title, {'attr': {'class': 'input'}}) }}
+                {{ form_widget(edit_form.title) }}
             </p>
 
-            {{ form_label(edit_form.content, '', {'label_attr': {'class': 'label'}}) }}
             <p class="control">
-                {{ form_widget(edit_form.content, {'attr': {'class': 'textarea'}}) }}
+                {{ form_widget(edit_form.content) }}
             </p>
 
             <div class="control is-grouped">

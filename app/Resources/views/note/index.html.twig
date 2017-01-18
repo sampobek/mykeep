@@ -4,32 +4,22 @@
     {% if notes %}
         <div class="columns">
             {% for note in notes %}
-                <div class="column is-one-third">
+                <a href="{{ path('note_edit', {id: note.id}) }}"
+                   class="column is-one-quarter note">
                     <div class="card">
-                        {% if note.title %}
-                        <header class="card-header">
-                            <p class="card-header-title" style="margin-left: 0.75em">
-                                <a href="{{ path('note_edit', {id: note.id}) }}">
-                                    {{ note.title }}
-                                </a>
-                            </p>
-                        </header>
-                        {% endif %}
                         <div class="card-content">
                             <div class="content">
+                                {% if note.title %}
+                                    <h5 class="title is-5">
+                                        {{ note.title }}
+                                    </h5>
+                                {% endif %}
                                 {{ note.content | nl2br }}
-                                <br>
-                                <br>
-                                <small>
-                                    <a href="{{ path('note_edit', {id: note.id}) }}">
-                                        {{ note.updatedAt | date('Y-m-d H:i:s') }}
-                                    </a>
-                                </small>
                             </div>
                         </div>
                     </div>
-                </div>
-                {% if (loop.index) % 3 == 0 %}
+                </a>
+                {% if (loop.index) % 4 == 0 %}
                     </div>
                     <div class="columns">
                 {% endif %}

@@ -4,32 +4,21 @@
     {% if notes %}
         <div class="columns">
             {% for note in notes %}
-                <div class="column is-one-third">
+                <div class="column is-one-quarter">
                     <div class="card">
-                        {% if note.title %}
-                        <header class="card-header">
-                            <p class="card-header-title" style="margin-left: 0.75em">
-                                <span>
-                                    {{ note.title }}
-                                </span>
-                            </p>
-                        </header>
-                        {% endif %}
                         <div class="card-content">
                             <div class="content">
+                                {% if note.title %}
+                                    <h4 class="title is-4">
+                                        {{ note.title }}
+                                    </h4>
+                                {% endif %}
                                 {{ note.content | nl2br }}
-                                <br>
-                                <br>
-                                <small>
-                                    <p>
-                                        {{ note.updatedAt | date('Y-m-d H:i:s') }}
-                                    </p>
-                                </small>
                             </div>
                         </div>
                     </div>
                 </div>
-                {% if (loop.index) % 3 == 0 %}
+                {% if (loop.index) % 4 == 0 %}
                     </div>
                     <div class="columns">
                 {% endif %}
