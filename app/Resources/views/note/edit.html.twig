@@ -36,3 +36,17 @@
         </div>
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if app.environment is in_array(['dev', 'test'] %}
+        <script src="{{ asset('assets/vendor/autosize/dist/autosize.js') }}"></script>
+    {% else %}
+        <script src="{{ asset('assets/vendor/autosize/dist/autosize.min.js') }}"></script>
+    {% endif %}
+    <script>
+        (function(document){
+            autosize(document.querySelectorAll('textarea'));
+        })(document);
+    </script>
+{% endblock %}

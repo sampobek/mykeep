@@ -1,0 +1,23 @@
+{
+  "name": "MyKeep",
+  "homepage": "https://github.com/sampobek/mykeep",
+  "authors": [
+    "Zamirbek Abdyldaev <sampobek@gmail.com>"
+  ],
+  "description": "Open Source alternative to Google Keep based on Symfony 3.2",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "web/assets/vendor/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "autosize": "~3.0.20"
+  }
+}
