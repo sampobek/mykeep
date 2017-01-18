@@ -39,7 +39,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% if app.environment is in_array(['dev', 'test'] %}
+    {% if app.environment in ['dev', 'test'] %}
         <script src="{{ asset('assets/vendor/autosize/dist/autosize.js') }}"></script>
     {% else %}
         <script src="{{ asset('assets/vendor/autosize/dist/autosize.min.js') }}"></script>
