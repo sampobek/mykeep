@@ -21,16 +21,18 @@
         {% block body %}{% endblock %}
 
         {% block javascripts %}
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ asset('js/routes.js') }}"></script>
             {% if app.environment in ['dev', 'test'] %}
                 <script src="{{ asset('vendor/jquery/dist/jquery.js') }}"></script>
                 <script src="{{ asset('vendor/autosize/dist/autosize.js') }}"></script>
                 <script src="{{ asset('vendor/magnific-popup/dist/jquery.magnific-popup.js') }}"></script>
-                <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-                <script src="{{ asset('js/routes.js') }}"></script>
+                <script src="{{ asset('vendor/masonry/dist/masonry.pkgd.js') }}"></script>
             {% else %}
                 <script src="{{ asset('vendor/jquery/dist/jquery.min.js') }}"></script>
                 <script src="{{ asset('vendor/autosize/dist/autosize.min.js') }}"></script>
                 <script src="{{ asset('vendor/magnific-popup/dist/jquery.magnific-popup.min.js') }}"></script>
+                <script src="{{ asset('vendor/masonry/dist/masonry.pkgd.min.js') }}"></script>
             {% endif %}
         {% endblock %}
     </body>

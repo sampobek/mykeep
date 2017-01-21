@@ -3,7 +3,6 @@ textarea.textarea {
 }
 
 .card {
-    margin-bottom: 20px;
     box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(150, 150, 150, 0.1);
     transition: box-shadow 0.1s linear;
 }
@@ -26,7 +25,7 @@ textarea.textarea {
 .white-popup-content {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(200, 200, 200, 0.1);
     background: #FFF;
-    padding: 15px;
+    padding: 44px 15px 15px 15px;
 }
 
 a.open-popup-link:focus {
@@ -35,10 +34,6 @@ a.open-popup-link:focus {
 
 .mfp-bg {
     background: #ffffff;
-}
-
-button.mfp-close {
-    display: none;
 }
 
 .nav-footer-content {
@@ -56,4 +51,3 @@ button.mfp-close {
 .button.is-white.save-state{
     color: #00d1b2;
 }
-

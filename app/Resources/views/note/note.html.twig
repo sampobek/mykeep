@@ -1,0 +1,21 @@
+{#<div class="">#}
+    <a href="#test-popup" class="column is-one-quarter open-popup-link"
+       id="note-{{ note.id }}"
+       data-id="{{ note.id }}"
+       data-title="{{ note.title }}"
+       data-content="{{ note.content }}">
+        <div class="card note">
+            <div class="card-content">
+                <div class="content">
+                    <h5 class="title is-5"
+                        id="note-title-{{ note.id }}"
+                        {% if not note.title %}style="display: none"{% endif %}
+                    >{{ note.title }}</h5>
+                    <span id="note-content-{{ note.id }}">
+                        {{ note.content | nl2br }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </a>
+{#</div>#}

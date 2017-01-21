@@ -1,47 +1,9 @@
 {% extends ':note:layout.html.twig' %}
 
 {% block content %}
-    {% if notes %}
-        <div class="columns">
-            {% set j = 0 %}
-            {% for i in 1..4 %}
-                <div class="column is-one-quarter">
-                    {% for k in 1..((notes | length) / 4) | round(0, 'ceil') %}
-                        {% if j < notes | length %}
-                            {% set note = notes[j] %}
-                            <a href="#test-popup" class="open-popup-link"
-                               id="note-{{ note.id }}"
-                               data-id="{{ note.id }}"
-                               data-title="{{ note.title }}"
-                               data-content="{{ note.content }}">
-                                <div class="card note">
-                                    <div class="card-content">
-                                        <div class="content">
-                                            {% if note.title %}
-                                                <h5 class="title is-5"
-                                                    id="note-title-{{ note.id }}">
-                                                    {{ note.title }}
-                                                </h5>
-                                            {% endif %}
-                                            <span id="note-content-{{ note.id }}">
-                                                {{ note.content | nl2br }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                            {% set j = j + 1 %}
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="notification has-text-centered">
-            You have no notes. Please&nbsp;
-            <a href="{{ path('note_new') }}">create one</a>.
-        </div>
-    {% endif %}
+    <div class="columns is-multiline">
+
+    </div>
 
     <div id="test-popup" class="white-popup mfp-hide">
         <div class="white-popup-content">
@@ -103,36 +65,44 @@
     {{ parent() }}
     <script>
         var timeout = null;
-        var reload = false;
-        $(function(){
+
+        $(function() {
             var contentTextArea = $('#app_note_content');
             autosize(contentTextArea);
 
-            $('.open-popup-link').magnificPopup({
-                type: 'inline',
-                callbacks: {
-                    close: function() {
-                        if (typeof timeout != 'undefined' && timeout !== null) {
-                            clearTimeout(timeout);
-                            sendRequest();
-                        }
-                        if (reload) {
-                            location.reload();
-                        }
+            $('.columns').masonry();
+
+            initMagnific();
+
+            $.ajax({
+                type: 'GET',
+                url: Routing.generate('note_list'),
+                success: function (response) {
+                    for (var index in response['notes']) {
+                        var note = response['notes'][index];
+                        var item = $(note['html']);
+                        $('.columns')
+                            .append(item)
+                            .masonry('appended', item);
                     }
+                },
+                error: function (response) {
+                    if (typeof response != 'undefined') {
+                        alert(response['message']);
+                    }
+                },
+                complete: function() {
+                    $('.columns').masonry();
+                    initMagnific();
                 }
             });
 
-            $('.open-popup-link').on('click',function() {
-                var id = $(this).data('id');
-                var title = $(this).data('title');
-                var content = $(this).data('content');
+            $('.columns').on('click', '.open-popup-link', function() {
+                initModal($(this), contentTextArea);
+            });
 
-                $('#app_note_id').val(id);
-                $('#app_note_title').val(title);
-                $('#app_note_content').val(content);
-
-                autosize.update(contentTextArea);
+            $('.nav-item').on('click', '.open-popup-link', function() {
+                initModal($(this), contentTextArea);
             });
 
             $('.delete-note').on('click', function() {
@@ -145,13 +115,16 @@
                             data: {id: id},
                             success: function () {
                                 $.magnificPopup.close();
-                                $('#note-' + id).hide();
-                                location.reload();
+                                var note = $('#note-' + id);
+                                $('.columns').masonry('remove', note);
                             },
                             error: function (response) {
                                 if (typeof response != 'undefined') {
                                     alert(response['message']);
                                 }
+                            },
+                            complete: function () {
+                                $('.columns').masonry();
                             }
                         });
                     }
@@ -171,6 +144,36 @@
             });
         });
 
+        var initModal = function(element, contentTextArea) {
+            var id = element.data('id');
+            var title = element.data('title');
+            var content = element.data('content');
+
+            $('#app_note_id').val(id);
+            $('#app_note_title').val(title);
+            $('#app_note_content').val(content);
+
+            autosize.update(contentTextArea);
+        };
+
+        var initMagnific = function() {
+            $('.open-popup-link').magnificPopup({
+                type: 'inline',
+                callbacks: {
+                    close: function() {
+                        if (typeof timeout != 'undefined' && timeout !== null) {
+                            clearTimeout(timeout);
+                            sendRequest();
+                        }
+                        $('#app_note_id').val('');
+                        $('#app_note_title').val('');
+                        $('#app_note_content').val('');
+                        $('.columns').masonry();
+                    }
+                }
+            });
+        };
+
         var saveNote = function() {
             if (typeof timeout != 'undefined' && timeout !== null) {
                 clearTimeout(timeout);
@@ -184,35 +187,50 @@
             var id = $('#app_note_id').val();
             var title = $('#app_note_title').val();
             var content = $('#app_note_content').val();
-            $.ajax({
-                type: 'POST',
-                url: Routing.generate('note_save'),
-                data: {id: id, title: title, content: content},
-                success: function(response) {
-                    if (id) {
-                        var noteTitle = response['note']['title'];
-                        var noteContent = response['note']['content'];
-                        var noteContentBr = response['note']['content_br'];
-                        $('#note-' + id).data('title', noteTitle);
-                        $('#note-' + id).data('content', noteContent);
-                        $('#note-title-' + id).text(noteTitle);
-                        $('#note-content-' + id).html(noteContentBr);
-                    } else {
-                        reload = true;
-                        var noteId = response['note']['id'];
-                        $('#app_note_id').val(noteId);
+            if (title || content) {
+                $.ajax({
+                    type: 'POST',
+                    url: Routing.generate('note_save'),
+                    data: {id: id, title: title, content: content},
+                    success: function (response) {
+                        if (id) {
+                            var noteTitle = response['note']['title'];
+                            var noteContent = response['note']['content'];
+                            var noteContentBr = response['note']['content_br'];
+                            $('#note-' + id).data('title', noteTitle);
+                            $('#note-' + id).data('content', noteContent);
+                            $('#note-title-' + id).text(noteTitle);
+                            $('#note-content-' + id).html(noteContentBr);
+                            if (noteTitle) {
+                                $('#note-title-' + id).show();
+                            } else {
+                                $('#note-title-' + id).hide();
+                            }
+                        } else {
+                            var noteId = response['note']['id'];
+                            $('#app_note_id').val(noteId);
+                            var items = $(response['note']['html']);
+                            $('.columns')
+                                .append(items)
+                                .masonry('appended', items);
+                            initMagnific();
+                        }
+                    },
+                    error: function (response) {
+                        if (typeof response != 'undefined') {
+                            alert(response['message']);
+                        }
+                    },
+                    complete: function () {
+                        $('.saving').hide();
+                        $('.saved').show();
+                        $('.columns').masonry();
                     }
-                },
-                error: function(response) {
-                    if (typeof response != 'undefined') {
-                        alert(response['message']);
-                    }
-                },
-                complete: function() {
-                    $('.saving').hide();
-                    $('.saved').show();
-                }
-            });
+                });
+            } else {
+                $('.saving').hide();
+                $('.saved').show();
+            }
         };
     </script>
 {% endblock %}

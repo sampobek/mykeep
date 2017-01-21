@@ -27,6 +27,18 @@ class NoteController extends Controller
             return $this->redirectToRoute('fos_user_security_login');
         }
 
+        return $this->render('note/index.html.twig');
+    }
+
+    /**
+     * @Route("/list", name="note_list", options={"expose"=true}, condition="request.isXmlHttpRequest()")
+     * @Method({"GET"})
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function ajaxListAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
 
         $notes = $em->getRepository('AppBundle:Note')
@@ -35,9 +47,24 @@ class NoteController extends Controller
                 'isDeleted' => false
             ]);
 
-        return $this->render('note/index.html.twig', array(
-            'notes' => $notes,
-        ));
+        $noteResponse = [];
+        foreach ($notes as $note) {
+            $noteResponse[] = [
+                'id' => $note->getId(),
+                'title' => $note->getTitle(),
+                'content' => $note->getContent(),
+                'content_br' => nl2br($note->getContent()),
+                'html' => $this->render("note/note.html.twig", [
+                    'note' => $note
+                ])->getContent()
+            ];
+        }
+
+        $response = [
+            'notes' => $noteResponse
+        ];
+
+        return new JsonResponse($response);
     }
 
     /**
@@ -78,6 +105,12 @@ class NoteController extends Controller
             'content' => $note->getContent(),
             'content_br' => nl2br($note->getContent())
         ];
+
+        if (!$id) {
+            $noteResponse['html'] = $this->render("note/note.html.twig", [
+                'note' => $note
+            ])->getContent();
+        }
 
         $response = [
             'message' => 'Note saved',

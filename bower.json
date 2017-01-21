@@ -22,6 +22,7 @@
     "font-awesome": "~4.7.0",
     "autosize": "~3.0.20",
     "jquery": "~3.1.1",
-    "magnific-popup": "~1.1.0"
+    "magnific-popup": "~1.1.0",
+    "masonry": "~4.1.1"
   }
 }
