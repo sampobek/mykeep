@@ -20,5 +20,8 @@
   "dependencies": {
     "bulma": "~0.3.1",
     "font-awesome": "~4.7.0",
+    "autosize": "~3.0.20",
+    "jquery": "~3.1.1",
+    "magnific-popup": "~1.1.0"
   }
 }

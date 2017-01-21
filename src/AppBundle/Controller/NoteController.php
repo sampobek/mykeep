@@ -5,7 +5,9 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Note;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Note controller.
@@ -39,92 +41,86 @@ class NoteController extends Controller
     }
 
     /**
-     * Creates a new note entity.
+     * @Route("/save", name="note_save", options={"expose"=true}, condition="request.isXmlHttpRequest()")
+     * @Method({"POST"})
      *
-     * @Route("/new", name="note_new")
-     * @Method({"GET", "POST"})
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function newAction(Request $request)
+    public function ajaxSaveAction(Request $request)
     {
-        $note = new Note();
-        $form = $this->createForm('AppBundle\Form\NoteType', $note);
-        $form->handleRequest($request);
+        $em = $this->getDoctrine()->getManager();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+        $id = $request->request->get('id');
+        if ($id) {
+            $note = $em->getRepository('AppBundle:Note')->find($id);
+        } else {
+            $note = new Note();
             $note->setUser($this->getUser());
-            $em->persist($note);
-            $em->flush($note);
-
-            return $this->redirectToRoute('note_index', array('id' => $note->getId()));
         }
 
-        return $this->render('note/new.html.twig', array(
-            'note' => $note,
-            'form' => $form->createView(),
-        ));
+        if (!$note) {
+            $response = ['message' => 'Note not found'];
+            return new JsonResponse($response, 404);
+        }
+
+        $title = $request->request->get('title');
+        $content = $request->request->get('content');
+
+        $note->setTitle($title);
+        $note->setContent($content);
+        $em->persist($note);
+        $em->flush();
+
+        $noteResponse = [
+            'id' => $note->getId(),
+            'title' => $note->getTitle(),
+            'content' => $note->getContent(),
+            'content_br' => nl2br($note->getContent())
+        ];
+
+        $response = [
+            'message' => 'Note saved',
+            'note' => $noteResponse
+        ];
+
+        return new JsonResponse($response);
     }
 
     /**
-     * Displays a form to edit an existing note entity.
+     * @Route("/delete", name="note_delete", options={"expose"=true}, condition="request.isXmlHttpRequest()")
+     * @Method({"POST"})
      *
-     * @Route("/{id}/edit", name="note_edit")
-     * @Method({"GET", "POST"})
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function editAction(Request $request, Note $note)
+    public function ajaxDeleteAction(Request $request)
     {
-        $deleteForm = $this->createDeleteForm($note);
-        $editForm = $this->createForm('AppBundle\Form\NoteType', $note);
-        $editForm->handleRequest($request);
+        $em = $this->getDoctrine()->getManager();
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('note_index');
+        $id = $request->request->get('id');
+        if (!$id) {
+            $response = ['message' => 'Note not found'];
+            return new JsonResponse($response, 404);
         }
 
-        return $this->render('note/edit.html.twig', array(
-            'note' => $note,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
+        $note = $em->getRepository('AppBundle:Note')->find($id);
 
-    /**
-     * Deletes a note entity.
-     *
-     * @Route("/{id}", name="note_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, Note $note)
-    {
-        $form = $this->createDeleteForm($note);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $note->setIsDeleted(true);
-            $em->persist($note);
-            $em->flush();
+        if (!$note) {
+            $response = ['message' => 'Note not found'];
+            return new JsonResponse($response, 404);
         }
 
-        return $this->redirectToRoute('note_index');
-    }
+        $note->setIsDeleted(true);
+        $em->persist($note);
+        $em->flush();
 
-    /**
-     * Creates a form to delete a note entity.
-     *
-     * @param Note $note The note entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Note $note)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('note_delete', array('id' => $note->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
+        $response = [
+            'message' => 'Note deleted',
+            'id' => $id
+        ];
+
+        return new JsonResponse($response);
     }
 
     /**

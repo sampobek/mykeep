@@ -1,13 +1,59 @@
+textarea.textarea {
+    max-height: none;
+}
+
+.card {
+    margin-bottom: 20px;
+    box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(150, 150, 150, 0.1);
+    transition: box-shadow 0.1s linear;
+}
+
 .card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.1);
-    margin-top: -1px;
-    margin-bottom: 21px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(200, 200, 200, 0.1);
 }
 
 .card .card-content .content {
     word-break: break-all;
 }
 
-.card {
-    margin-bottom: 20px;
+.white-popup {
+    position: relative;
+    width: auto;
+    max-width: 580px;
+    margin: 50px auto 70px;
 }
+
+.white-popup-content {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(200, 200, 200, 0.1);
+    background: #FFF;
+    padding: 15px;
+}
+
+a.open-popup-link:focus {
+    outline: none;
+}
+
+.mfp-bg {
+    background: #ffffff;
+}
+
+button.mfp-close {
+    display: none;
+}
+
+.nav-footer-content {
+    width: 580px;
+    margin: 20px auto 0;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(200, 200, 200, 0.1);
+    position: fixed;
+    bottom: 0;
+}
+
+.saving {
+    display: none;
+}
+
+.button.is-white.save-state{
+    color: #00d1b2;
+}
+

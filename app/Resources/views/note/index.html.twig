@@ -9,16 +9,23 @@
                     {% for k in 1..((notes | length) / 4) | round(0, 'ceil') %}
                         {% if j < notes | length %}
                             {% set note = notes[j] %}
-                            <a href="{{ path('note_edit', {id: note.id}) }}" >
+                            <a href="#test-popup" class="open-popup-link"
+                               id="note-{{ note.id }}"
+                               data-id="{{ note.id }}"
+                               data-title="{{ note.title }}"
+                               data-content="{{ note.content }}">
                                 <div class="card note">
                                     <div class="card-content">
                                         <div class="content">
                                             {% if note.title %}
-                                                <h5 class="title is-5">
+                                                <h5 class="title is-5"
+                                                    id="note-title-{{ note.id }}">
                                                     {{ note.title }}
                                                 </h5>
                                             {% endif %}
-                                            {{ note.content | nl2br }}
+                                            <span id="note-content-{{ note.id }}">
+                                                {{ note.content | nl2br }}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -31,7 +38,181 @@
         </div>
     {% else %}
         <div class="notification has-text-centered">
-            You have no notes. Please <a href="{{ path('note_new') }}">create one</a>.
+            You have no notes. Please&nbsp;
+            <a href="{{ path('note_new') }}">create one</a>.
         </div>
     {% endif %}
+
+    <div id="test-popup" class="white-popup mfp-hide">
+        <div class="white-popup-content">
+        {#<form name="app_note" method="post">#}
+            <p class="control is-5">
+                <input type="text" id="app_note_title"
+                       name="app_note[title]" class="input"
+                       placeholder="Note Title">
+            </p>
+            <p class="control">
+                <textarea id="app_note_content" name="app_note[content]"
+                          required="required" class="textarea"
+                          placeholder="Note Content"
+                          style=""></textarea>
+            </p>
+            <input type="hidden" id="app_note_id" name="app_note[id]" value="">
+        {#</form>#}
+        </div>
+
+        <nav class="nav nav-footer-content" id="nav-footer-content">
+            <div class="nav-left">
+                <span class="nav-item">
+                    <a class="button is-danger delete-note">
+                        <span class="icon">
+                            <i class="fa fa-trash-o"></i>
+                        </span>
+                        <span>Delete</span>
+                    </a>
+                </span>
+            </div>
+            <div class="nav-center">
+                <span class="nav-item">
+                    <span class="button is-white save-state">
+                        <span class="icon">
+                            <i class="fa fa-spinner saving"></i>
+                            <i class="fa fa-check saved"></i>
+                        </span>
+                        {#<span class="saving">Saving</span>#}
+                        {#<span class="saved">Saved</span>#}
+                    </span>
+                </span>
+            </div>
+            <div class="nav-right">
+                <span class="nav-item">
+                    <a class="button close-popup">
+                        <span class="icon">
+                            <i class="fa fa-times-circle"></i>
+                        </span>
+                        <span>Close</span>
+                    </a>
+                </span>
+            </div>
+        </nav>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var timeout = null;
+        var reload = false;
+        $(function(){
+            var contentTextArea = $('#app_note_content');
+            autosize(contentTextArea);
+
+            $('.open-popup-link').magnificPopup({
+                type: 'inline',
+                callbacks: {
+                    close: function() {
+                        if (typeof timeout != 'undefined' && timeout !== null) {
+                            clearTimeout(timeout);
+                            sendRequest();
+                        }
+                        if (reload) {
+                            location.reload();
+                        }
+                    }
+                }
+            });
+
+            $('.open-popup-link').on('click',function() {
+                var id = $(this).data('id');
+                var title = $(this).data('title');
+                var content = $(this).data('content');
+
+                $('#app_note_id').val(id);
+                $('#app_note_title').val(title);
+                $('#app_note_content').val(content);
+
+                autosize.update(contentTextArea);
+            });
+
+            $('.delete-note').on('click', function() {
+                var id = $('#app_note_id').val();
+                if (id) {
+                    if (confirm('Do you really want to delete note?')) {
+                        $.ajax({
+                            type: 'POST',
+                            url: Routing.generate('note_delete'),
+                            data: {id: id},
+                            success: function () {
+                                $.magnificPopup.close();
+                                $('#note-' + id).hide();
+                                location.reload();
+                            },
+                            error: function (response) {
+                                if (typeof response != 'undefined') {
+                                    alert(response['message']);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
+            $('.close-popup').on('click', function() {
+                $.magnificPopup.close();
+            });
+
+            $('#app_note_title').on('input', function() {
+                saveNote();
+            });
+
+            $('#app_note_content').on('input', function() {
+                saveNote();
+            });
+        });
+
+        var saveNote = function() {
+            if (typeof timeout != 'undefined' && timeout !== null) {
+                clearTimeout(timeout);
+            }
+            $('.saving').css('display', 'inline-block');
+            $('.saved').hide();
+            timeout = setTimeout(sendRequest, 1000);
+        };
+
+        var sendRequest = function() {
+            var id = $('#app_note_id').val();
+            var title = $('#app_note_title').val();
+            var content = $('#app_note_content').val();
+            $.ajax({
+                type: 'POST',
+                url: Routing.generate('note_save'),
+                data: {id: id, title: title, content: content},
+                success: function(response) {
+                    if (id) {
+                        var noteTitle = response['note']['title'];
+                        var noteContent = response['note']['content'];
+                        var noteContentBr = response['note']['content_br'];
+                        $('#note-' + id).data('title', noteTitle);
+                        $('#note-' + id).data('content', noteContent);
+                        $('#note-title-' + id).text(noteTitle);
+                        $('#note-content-' + id).html(noteContentBr);
+                    } else {
+                        reload = true;
+                        var noteId = response['note']['id'];
+                        $('#app_note_id').val(noteId);
+                    }
+                },
+                error: function(response) {
+                    if (typeof response != 'undefined') {
+                        alert(response['message']);
+                    }
+                },
+                complete: function() {
+                    $('.saving').hide();
+                    $('.saved').show();
+                }
+            });
+        };
+    </script>
 {% endblock %}
