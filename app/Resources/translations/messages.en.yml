@@ -6,6 +6,8 @@ note:
   note_saved: Note saved
   note_not_found: Note not found
   note_deleted: Note deleted
+  color_not_found: Color Not Found
+  note_color_changed: Note Color Changed
 
 trash: Trash
 logout: Logout

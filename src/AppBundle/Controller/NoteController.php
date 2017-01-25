@@ -27,7 +27,11 @@ class NoteController extends Controller
             return $this->redirectToRoute('fos_user_security_login');
         }
 
-        return $this->render('note/index.html.twig');
+        $em = $this->getDoctrine()->getManager();
+
+        $colors = $em->getRepository('AppBundle:Color')->findAll();
+
+        return $this->render('note/index.html.twig', ['colors' => $colors]);
     }
 
     /**
@@ -152,6 +156,50 @@ class NoteController extends Controller
 
         $response = [
             'message' => $trans->trans('note.note_deleted'),
+            'id' => $id
+        ];
+
+        return new JsonResponse($response);
+    }
+
+    /**
+     * @Route("/set-color", name="note_set_color", options={"expose"=true}, condition="request.isXmlHttpRequest()")
+     * @Method({"POST"})
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function ajaxSetColorAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $trans = $this->get('translator');
+
+        $id = $request->request->get('id');
+        if (!$id) {
+            $response = ['message' => $trans->trans('note.note_not_found')];
+
+            return new JsonResponse($response, 404);
+        }
+
+        $note = $em->getRepository('AppBundle:Note')->find($id);
+        if (!$note) {
+            $response = ['message' => $trans->trans('note.note_not_found')];
+
+            return new JsonResponse($response, 404);
+        }
+
+        $id = $request->request->get('colorId', 0);
+        $color = $em->getRepository('AppBundle:Color')->find($id);
+        if (!$color) {
+            $color = null;
+        }
+
+        $note->setColor($color);
+        $em->persist($note);
+        $em->flush();
+
+        $response = [
+            'message' => $trans->trans('note.note_color_changed'),
             'id' => $id
         ];
 

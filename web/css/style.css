@@ -2,6 +2,18 @@ textarea.textarea {
     max-height: none;
 }
 
+input.input {
+    font-size: 1.25rem;
+}
+
+.input, .textarea,
+.input:hover, .textarea:hover,
+.input:focus, .textarea:focus {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+}
+
 .card {
     box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(150, 150, 150, 0.1);
     transition: box-shadow 0.1s linear;
@@ -50,4 +62,20 @@ a.open-popup-link:focus {
 
 .button.is-white.save-state{
     color: #00d1b2;
+}
+
+.note-color-block {
+    margin-top: -30px;
+    margin-bottom: 20px;
+}
+
+.note-color {
+    width: 60px;
+    height: 15px;
+    display: block;
+    float: left;
+}
+
+.note-color:not(:first-child) {
+    margin-left: 1px;
 }

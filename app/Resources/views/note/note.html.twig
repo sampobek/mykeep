@@ -3,9 +3,11 @@
        id="note-{{ note.id }}"
        data-id="{{ note.id }}"
        data-title="{{ note.title }}"
-       data-content="{{ note.content }}">
+       data-content="{{ note.content }}"
+       data-color="{{ note.color ? note.color.hex : 'ffffff' }}">
         <div class="card note">
-            <div class="card-content">
+            {% set colorStyle = note.color ? 'background-color: #' ~ note.color.hex : '' %}
+            <div class="card-content" style="{{ colorStyle }}">
                 <div class="content">
                     <h5 class="title is-5"
                         id="note-title-{{ note.id }}"

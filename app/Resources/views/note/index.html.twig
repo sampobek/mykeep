@@ -7,6 +7,16 @@
 
     <div id="test-popup" class="white-popup mfp-hide">
         <div class="white-popup-content">
+            <div class="note-color-block">
+                {% for color in colors %}
+                    {% set colorStyle = 'background-color: #' ~ color.hex %}
+                    <a href="javascript:" class="note-color" style="{{ colorStyle }}"
+                       title="{{ color.title }}"
+                       data-color-id="{{ color.id }}"
+                       data-color="{{ color.hex }}"></a>
+                {% endfor %}
+                <div style="clear: both"></div>
+            </div>
         {#<form name="app_note" method="post">#}
             <p class="control is-5">
                 <input type="text" id="app_note_title"
@@ -142,18 +152,49 @@
             $('#app_note_content').on('input', function() {
                 saveNote();
             });
+
+            $('.note-color').on('click', function() {
+                var id = $('#app_note_id').val();
+                var colorId = $(this).data('color-id');
+                var color = $(this).data('color');
+                $('#test-popup').css('background-color', '#' + color);
+                $('.white-popup-content').css('background-color', '#' + color);
+                $('#app_note_title').css('background-color', '#' + color);
+                $('#app_note_content').css('background-color', '#' + color);
+
+                $.ajax({
+                    type: 'POST',
+                    url: Routing.generate('note_set_color'),
+                    data: {id: id, colorId: colorId},
+                    success: function () {
+                        $('#note-' + id +' .card-content').css('background-color', '#' + color);
+                        $('#note-' + id).data('color', color);
+                    },
+                    error: function (response) {
+                        if (typeof response != 'undefined') {
+                            alert(response['message']);
+                        }
+                    }
+                });
+            });
         });
 
         var initModal = function(element, contentTextArea) {
             var id = element.data('id');
             var title = element.data('title');
             var content = element.data('content');
+            var color = element.data('color');
 
             $('#app_note_id').val(id);
             $('#app_note_title').val(title);
             $('#app_note_content').val(content);
 
             autosize.update(contentTextArea);
+
+            $('#test-popup').css('background-color', '#' + color);
+            $('.white-popup-content').css('background-color', '#' + color);
+            $('#app_note_title').css('background-color', '#' + color);
+            $('#app_note_content').css('background-color', '#' + color);
         };
 
         var initMagnific = function() {

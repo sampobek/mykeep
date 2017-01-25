@@ -36,6 +36,13 @@ class Note
     private $content;
 
     /**
+     * One Note has One Color.
+     * @ORM\ManyToOne(targetEntity="Color")
+     * @ORM\JoinColumn(name="color_id", referencedColumnName="id")
+     */
+    private $color;
+
+    /**
      * Many Notes related to one User.
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
@@ -222,5 +229,29 @@ class Note
     public function getIsDeleted()
     {
         return $this->isDeleted;
+    }
+
+    /**
+     * Set color
+     *
+     * @param \AppBundle\Entity\Color $color
+     *
+     * @return Note
+     */
+    public function setColor(\AppBundle\Entity\Color $color = null)
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    /**
+     * Get color
+     *
+     * @return \AppBundle\Entity\Color
+     */
+    public function getColor()
+    {
+        return $this->color;
     }
 }
