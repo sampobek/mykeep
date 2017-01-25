@@ -8,12 +8,14 @@
         </div>
         <div class="nav-center">
             <span class="nav-item">
-                <a href="#test-popup" class="button is-primary open-popup-link">
-                    <span class="icon">
-                        <i class="fa fa-plus"></i>
-                    </span>
-                    <span>Add New</span>
-                </a>
+                {% if app.request.attributes.get('_route') == 'homepage' %}
+                    <a href="#test-popup" class="button is-primary open-popup-link">
+                        <span class="icon">
+                            <i class="fa fa-plus"></i>
+                        </span>
+                        <span>Add New</span>
+                    </a>
+                {% endif %}
             </span>
         </div>
         <span class="nav-toggle">
