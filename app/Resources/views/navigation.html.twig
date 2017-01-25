@@ -13,7 +13,7 @@
                         <span class="icon">
                             <i class="fa fa-plus"></i>
                         </span>
-                        <span>Add New</span>
+                        <span>{{ 'note.add_new' | trans }}</span>
                     </a>
                 {% endif %}
             </span>
@@ -27,23 +27,23 @@
             {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                 <a href="{{ path('note_trash') }}"
                    class="nav-item is-tab {{ 'note_trash' | active('is-active') }}">
-                    Trash
+                    {{ 'trash' | trans }}
                 </a>
                 <a class="nav-item is-tab">
                     {{ app.user.username }}
                 </a>
                 <a href="{{ path('fos_user_security_logout') }}"
                    class="nav-item is-tab">
-                    Log out
+                    {{ 'logout' | trans }}
                 </a>
             {% else %}
                 <a href="{{ path('fos_user_registration_register') }}"
                    class="nav-item is-tab {{ 'fos_user_registration_register' | active('is-active') }}">
-                    Registration
+                    {{ 'registration' | trans }}
                 </a>
                 <a href="{{ path('fos_user_security_login') }}"
                    class="nav-item is-tab {{ 'fos_user_security_login' | active('is-active') }}">
-                    Login
+                    {{ 'login' | trans }}
                 </a>
             {% endif %}
         </div>

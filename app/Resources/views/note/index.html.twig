@@ -11,12 +11,12 @@
             <p class="control is-5">
                 <input type="text" id="app_note_title"
                        name="app_note[title]" class="input"
-                       placeholder="Note Title">
+                       placeholder="{{ 'note.note_title' | trans }}">
             </p>
             <p class="control">
                 <textarea id="app_note_content" name="app_note[content]"
                           required="required" class="textarea"
-                          placeholder="Note Content"
+                          placeholder="{{ 'note.note_content' | trans }}"
                           style=""></textarea>
             </p>
             <input type="hidden" id="app_note_id" name="app_note[id]" value="">
@@ -30,7 +30,7 @@
                         <span class="icon">
                             <i class="fa fa-trash-o"></i>
                         </span>
-                        <span>Delete</span>
+                        <span>{{ 'delete' | trans }}</span>
                     </a>
                 </span>
             </div>
@@ -52,7 +52,7 @@
                         <span class="icon">
                             <i class="fa fa-times-circle"></i>
                         </span>
-                        <span>Close</span>
+                        <span>{{ 'close' | trans }}</span>
                     </a>
                 </span>
             </div>

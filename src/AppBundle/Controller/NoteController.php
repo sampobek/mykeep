@@ -77,6 +77,7 @@ class NoteController extends Controller
     public function ajaxSaveAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        $trans = $this->get('translator');
 
         $id = $request->request->get('id');
         if ($id) {
@@ -87,7 +88,7 @@ class NoteController extends Controller
         }
 
         if (!$note) {
-            $response = ['message' => 'Note not found'];
+            $response = ['message' => $trans->trans('note.note_not_found')];
             return new JsonResponse($response, 404);
         }
 
@@ -113,7 +114,7 @@ class NoteController extends Controller
         }
 
         $response = [
-            'message' => 'Note saved',
+            'message' => $trans->trans('note.note_saved'),
             'note' => $noteResponse
         ];
 
@@ -130,17 +131,18 @@ class NoteController extends Controller
     public function ajaxDeleteAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        $trans = $this->get('translator');
 
         $id = $request->request->get('id');
         if (!$id) {
-            $response = ['message' => 'Note not found'];
+            $response = ['message' => $trans->trans('note.note_not_found')];
             return new JsonResponse($response, 404);
         }
 
         $note = $em->getRepository('AppBundle:Note')->find($id);
 
         if (!$note) {
-            $response = ['message' => 'Note not found'];
+            $response = ['message' => $trans->trans('note.note_not_found')];
             return new JsonResponse($response, 404);
         }
 
@@ -149,7 +151,7 @@ class NoteController extends Controller
         $em->flush();
 
         $response = [
-            'message' => 'Note deleted',
+            'message' => $trans->trans('note.note_deleted'),
             'id' => $id
         ];
 

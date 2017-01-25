@@ -1,0 +1,15 @@
+note:
+  add_new: Add New
+  note_title: Note Title
+  note_content: Note Content
+  you_have_no_removed_notes: You have no removed notes
+  note_saved: Note saved
+  note_not_found: Note not found
+  note_deleted: Note deleted
+
+trash: Trash
+logout: Logout
+login: Login
+registration: Registration
+close: Close
+delete: Delete
