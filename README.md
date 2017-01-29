@@ -25,6 +25,7 @@ bin/console doctrine:database:create
 bin/console doctrine:migrations:migrate
 bin/console assets:install --symlink
 bin/console fos:js-routing:dump --target=web/js/routes.js
+bin/console bazinga:js-translation:dump --merge-domains
 
 bower install
 ```
