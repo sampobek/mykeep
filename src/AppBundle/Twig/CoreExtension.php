@@ -21,6 +21,7 @@ class CoreExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFilter('active', array($this, 'isActive')),
+            new \Twig_SimpleFilter('tags', array($this, 'getTags')),
         );
     }
 
@@ -32,6 +33,11 @@ class CoreExtension extends \Twig_Extension
         }
 
         return '';
+    }
+
+    public function getTags($content)
+    {
+        return $this->container->get('note.manager')->highlightTag($content);
     }
 
     public function getName()

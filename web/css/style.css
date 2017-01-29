@@ -89,3 +89,15 @@ a.open-popup-link:focus {
     position: fixed;
     top: 0;
 }
+
+.link {
+    color: #00d1b2;
+}
+
+.tags {
+    margin-bottom: 20px;
+}
+
+.tags .tag-item:not(:first-child) {
+    margin-left: 10px;
+}

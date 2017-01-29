@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Note controller.
@@ -15,13 +17,18 @@ use Symfony\Component\HttpFoundation\Request;
 class NoteController extends Controller
 {
     /**
+     *
      * Lists all note entities.
      *
      * @Route("/", name="homepage")
-     * @Route("/", name="note_index")
+     * @Route("/", name="note_index", options={"expose"=true})
+     * @Route("/t/{tag}", name="note_index_tag")
      * @Method("GET")
+     *
+     * @param null $tag
+     * @return RedirectResponse|Response
      */
-    public function indexAction()
+    public function indexAction($tag = null)
     {
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirectToRoute('fos_user_security_login');
@@ -31,7 +38,7 @@ class NoteController extends Controller
 
         $colors = $em->getRepository('AppBundle:Color')->findAll();
 
-        return $this->render('note/index.html.twig', ['colors' => $colors]);
+        return $this->render('note/index.html.twig', ['colors' => $colors, 'tag' => $tag]);
     }
 
     /**
@@ -44,12 +51,19 @@ class NoteController extends Controller
     public function ajaxListAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        $tag = $request->query->get('tag');
 
-        $notes = $em->getRepository('AppBundle:Note')
-            ->findBy([
-                'user' => $this->getUser(),
-                'isDeleted' => false
-            ]);
+        $user = $this->getUser();
+        if ($tag) {
+            $notes = $em->getRepository('AppBundle:Note')
+                ->getByTag($user, $tag);
+        } else {
+            $notes = $em->getRepository('AppBundle:Note')
+                ->findBy([
+                    'user' => $user,
+                    'isDeleted' => false
+                ]);
+        }
 
         $noteResponse = [];
         foreach ($notes as $note) {
@@ -99,23 +113,8 @@ class NoteController extends Controller
         $title = $request->request->get('title');
         $content = $request->request->get('content');
 
-        $note->setTitle($title);
-        $note->setContent($content);
-        $em->persist($note);
-        $em->flush();
-
-        $noteResponse = [
-            'id' => $note->getId(),
-            'title' => $note->getTitle(),
-            'content' => $note->getContent(),
-            'content_br' => nl2br($note->getContent())
-        ];
-
-        if (!$id) {
-            $noteResponse['html'] = $this->render("note/note.html.twig", [
-                'note' => $note
-            ])->getContent();
-        }
+        $noteResponse = $this->get('note.manager')
+            ->save($note, $title, $content, $id);
 
         $response = [
             'message' => $trans->trans('note.note_saved'),

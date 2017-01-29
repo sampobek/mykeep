@@ -14,7 +14,7 @@
                         {% if not note.title %}style="display: none"{% endif %}
                     >{{ note.title }}</h5>
                     <span id="note-content-{{ note.id }}">
-                        {{ note.content | nl2br }}
+                        {{ note.content | nl2br | tags | raw }}
                     </span>
                 </div>
             </div>

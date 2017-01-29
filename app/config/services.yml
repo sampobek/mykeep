@@ -18,3 +18,7 @@ services:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: preUpdate }
             - { name: doctrine.event_listener, event: postFlush }
+
+    note.manager:
+        class: AppBundle\Service\NoteManager
+        arguments: ['@service_container', '@doctrine.orm.entity_manager']

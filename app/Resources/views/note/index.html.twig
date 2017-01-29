@@ -1,6 +1,10 @@
 {% extends ':note:layout.html.twig' %}
 
 {% block content %}
+    <div class="tags">
+
+    </div>
+
     <div class="columns is-multiline">
 
     </div>
@@ -84,6 +88,8 @@
     <script>
         var timeout = null;
 
+        var tag = '{{ tag }}';
+
         $(function() {
             var contentTextArea = $('.textarea');
             autosize(contentTextArea);
@@ -92,9 +98,11 @@
 
             initMagnific();
 
+            loadTags();
+
             $.ajax({
                 type: 'GET',
-                url: Routing.generate('note_list'),
+                url: Routing.generate('note_list', {tag: tag}),
                 success: function (response) {
                     for (var index in response['notes']) {
                         var note = response['notes'][index];
@@ -135,6 +143,7 @@
                                 $.magnificPopup.close();
                                 var note = $('#note-' + id);
                                 $('.columns').masonry('remove', note);
+                                loadTags();
                             },
                             error: function (response) {
                                 if (typeof response != 'undefined') {
@@ -260,6 +269,7 @@
                             } else {
                                 $('#note-title-' + id).hide();
                             }
+                            loadTags();
                         } else {
                             var noteId = response['note']['id'];
                             $('#app_note_id').val(noteId);
@@ -286,5 +296,27 @@
                 $('.saved').show();
             }
         };
+
+        var loadTags = function () {
+            var all = Translator.trans('all');
+            var url = Routing.generate('note_index');
+            $('.tags').html('<a href="' + url + '" class="tag-item">' + all + '</a>');
+            $.ajax({
+                type: 'GET',
+                url: Routing.generate('tag_list'),
+                success: function (response) {
+                    for (var index in response['tags']) {
+                        var tag = response['tags'][index];
+                        var item = $(tag['html']);
+                        $('.tags').append(item);
+                    }
+                },
+                error: function (response) {
+                    if (typeof response != 'undefined') {
+                        alert(response['message']);
+                    }
+                }
+            });
+        }
     </script>
 {% endblock %}
