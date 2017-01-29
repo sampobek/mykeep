@@ -22,7 +22,7 @@ composer install
 Configure database and smtp
 ```
 bin/console doctrine:database:create
-bin/console doctrine:schema:update --force
+bin/console doctrine:migrations:migrate
 bin/console assets:install --symlink
 bin/console fos:js-routing:dump --target=web/js/routes.js
 
