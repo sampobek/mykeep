@@ -2,13 +2,14 @@ textarea.textarea {
     max-height: none;
 }
 
-input.input {
+#app_note_title {
     font-size: 1.25rem;
+    min-height: 1.25rem;
 }
 
-.input, .textarea,
-.input:hover, .textarea:hover,
-.input:focus, .textarea:focus {
+.white-popup .input, .white-popup .textarea,
+.white-popup .input:hover, .white-popup .textarea:hover,
+.white-popup .input:focus, .white-popup .textarea:focus {
     border: none;
     box-shadow: none;
     padding: 0;
@@ -37,7 +38,7 @@ input.input {
 .white-popup-content {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(200, 200, 200, 0.1);
     background: #FFF;
-    padding: 44px 15px 15px 15px;
+    padding: 15px;
 }
 
 a.open-popup-link:focus {
@@ -46,6 +47,12 @@ a.open-popup-link:focus {
 
 .mfp-bg {
     background: #ffffff;
+}
+
+.mfp-close {
+    position: fixed;
+    right: 0;
+    top: 0;
 }
 
 .nav-footer-content {
@@ -64,18 +71,21 @@ a.open-popup-link:focus {
     color: #00d1b2;
 }
 
-.note-color-block {
-    margin-top: -30px;
-    margin-bottom: 20px;
-}
-
 .note-color {
     width: 60px;
-    height: 15px;
+    height: 25px;
     display: block;
     float: left;
 }
 
 .note-color:not(:first-child) {
     margin-left: 1px;
+}
+
+.nav-header-content {
+    width: 580px;
+    margin: 0 auto 20px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(200, 200, 200, 0.1);
+    position: fixed;
+    top: 0;
 }
