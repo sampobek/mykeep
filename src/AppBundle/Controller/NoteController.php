@@ -103,6 +103,12 @@ class NoteController extends Controller
         } else {
             $note = new Note();
             $note->setUser($this->getUser());
+
+            $colorId = $request->request->get('colorId', 0);
+            $color = $em->getRepository('AppBundle:Color')->find($colorId);
+            if ($color) {
+                $note->setColor($color);
+            }
         }
 
         if (!$note) {

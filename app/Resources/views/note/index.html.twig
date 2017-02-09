@@ -42,6 +42,7 @@
                           placeholder="{{ 'note.note_content' | trans }}"></textarea>
             </p>
             <input type="hidden" id="app_note_id" name="app_note[id]" value="">
+            <input type="hidden" id="app_note_color" name="app_note[colorId]" value="">
         {#</form>#}
         </div>
 
@@ -179,20 +180,24 @@
                 $('#app_note_title').css('background-color', '#' + color);
                 $('#app_note_content').css('background-color', '#' + color);
 
-                $.ajax({
-                    type: 'POST',
-                    url: Routing.generate('note_set_color'),
-                    data: {id: id, colorId: colorId},
-                    success: function () {
-                        $('#note-' + id +' .card-content').css('background-color', '#' + color);
-                        $('#note-' + id).data('color', color);
-                    },
-                    error: function (response) {
-                        if (typeof response != 'undefined') {
-                            alert(response['message']);
+                if (id) {
+                    $.ajax({
+                        type: 'POST',
+                        url: Routing.generate('note_set_color'),
+                        data: {id: id, colorId: colorId},
+                        success: function () {
+                            $('#note-' + id + ' .card-content').css('background-color', '#' + color);
+                            $('#note-' + id).data('color', color);
+                        },
+                        error: function (response) {
+                            if (typeof response != 'undefined') {
+                                alert(response['message']);
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    $('#app_note_color').val(colorId);
+                }
             });
         });
 
@@ -250,11 +255,12 @@
             var id = $('#app_note_id').val();
             var title = $('#app_note_title').val();
             var content = $('#app_note_content').val();
+            var color = $('#app_note_color').val();
             if (title || content) {
                 $.ajax({
                     type: 'POST',
                     url: Routing.generate('note_save'),
-                    data: {id: id, title: title, content: content},
+                    data: {id: id, title: title, content: content, colorId: color},
                     success: function (response) {
                         if (id) {
                             var noteTitle = response['note']['title'];
