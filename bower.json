@@ -18,11 +18,11 @@
     "tests"
   ],
   "dependencies": {
-    "bulma": "~0.3.1",
+    "bulma": "~0.6",
     "font-awesome": "~4.7.0",
-    "autosize": "~3.0.20",
-    "jquery": "~3.1.1",
+    "autosize": "~4.0.0",
+    "jquery": "~3.2.1",
     "magnific-popup": "~1.1.0",
-    "masonry": "~4.1.1"
+    "masonry": "~4.2.0"
   }
 }

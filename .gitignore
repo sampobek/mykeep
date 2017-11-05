@@ -13,3 +13,5 @@
 /web/js/translations
 /web/js/routes.js
 /web/vendor
+.web-server-pid
+npm-debug.log

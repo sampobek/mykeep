@@ -11,9 +11,9 @@
 
     <div id="test-popup" class="white-popup mfp-hide">
 
-        <nav class="nav nav-header-content" id="nav-header-content">
-            <div class="nav-center">
-                <span class="nav-item">
+        <nav class="navbar nav-header-content" id="nav-header-content">
+            <div class="navbar-center">
+                <span class="navbar-item">
                     <div class="note-color-block">
                         {% for color in colors %}
                             {% set colorStyle = 'background-color: #' ~ color.hex %}
@@ -46,9 +46,9 @@
         {#</form>#}
         </div>
 
-        <nav class="nav nav-footer-content" id="nav-footer-content">
-            <div class="nav-left">
-                <span class="nav-item">
+        <nav class="navbar nav-footer-content" id="nav-footer-content">
+            <div class="navbar-start">
+                <span class="navbar-item">
                     <a class="button is-danger delete-note">
                         <span class="icon">
                             <i class="fa fa-trash-o"></i>
@@ -57,20 +57,18 @@
                     </a>
                 </span>
             </div>
-            <div class="nav-center">
-                <span class="nav-item">
+            <div class="navbar-center">
+                <span class="navbar-item">
                     <span class="button is-white save-state">
                         <span class="icon">
                             <i class="fa fa-spinner saving"></i>
                             <i class="fa fa-check saved"></i>
                         </span>
-                        {#<span class="saving">Saving</span>#}
-                        {#<span class="saved">Saved</span>#}
                     </span>
                 </span>
             </div>
-            <div class="nav-right">
-                <span class="nav-item">
+            <div class="navbar-end">
+                <span class="navbar-item">
                     <a class="button close-popup">
                         <span class="icon">
                             <i class="fa fa-times-circle"></i>
