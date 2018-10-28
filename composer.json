@@ -33,7 +33,7 @@
         "sensio/framework-extra-bundle": "^3.0.2",
         "symfony/polyfill-apcu": "^1.0",
         "symfony/swiftmailer-bundle": "^2.3",
-        "symfony/symfony": "3.3.*",
+        "symfony/symfony": "3.4.*",
         "willdurand/js-translation-bundle": "^2.6"
     },
     "require-dev": {
